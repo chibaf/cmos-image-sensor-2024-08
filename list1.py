@@ -45,7 +45,7 @@ input('  改行を押してキャプチャ開始 >')
 camera.stop_preview()                                       # プレビュー・ストップ
 
 ##### 蓄積時間の自動調整(AE)解除とISO感度の設定およびその表示 #####
-camera.shutter_speed = camera.exposure_speed    # AE状態蓄積時間のコピー
+camera.shutter_speed = camera.framerate    # AE状態蓄積時間のコピー
 camera.exposure_mode = 'off'                    # 蓄積時間の固定化
 AutoExpSpeed = camera.shutter_speed             # AE状態蓄積時間の記憶
 camera.iso = ISO                                # ISO感度
@@ -74,7 +74,7 @@ for i in range(Nexp):
     camera.shutter_speed = int(i/Nexp*Rexp*AutoExpSpeed)+1  # 蓄積時間振り
     print("  蓄積時間振り =", i+1, ", 蓄積時間 =", camera.shutter_speed, " [us]")
     stream = io.BytesIO()                               # 入出力バイナリ・ストリームからメモリへ
-    camera.capture(stream, format='jpeg', bayer=True)   # Rawデータ付きJPEG画像のキャプチャ
+    camera.start_and_capture_file("test.jpg")   # Rawデータ付きJPEG画像のキャプチャ
     raw = Strm2Img(stream)                              # 2次元配列に変換
     Sig[i, 0] = camera.shutter_speed                        # 蓄積時間
     Sig[i, 1] = np.mean(raw[ROI[0]  :ROI[0]+ROI[2]  :2, \
